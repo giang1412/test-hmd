@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -19,6 +18,7 @@ model User {
   email     String   @unique
   name      String
   password  String
+  phone     String   @unique
   role      Role     @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -29,6 +29,7 @@ model User {
 model RefreshToken {
   token     String   @unique @db.VarChar(300)
   userId    String
+  role      Role     @default(USER)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   expiresAt DateTime
   createdAt DateTime @default(now())
