@@ -1,17 +1,19 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common'
 import { ZodSerializerDto } from 'nestjs-zod'
 import {
   LoginBodyDTO,
   LoginResDTO,
   LogoutBodyDTO,
+  ProfileResDTO,
   RefreshTokenBodyDTO,
   RefreshTokenResDTO,
   RegisterBodyDTO,
   RegisterResDTO,
 } from 'src/auth/auth.dto'
 import { AuthService } from 'src/auth/auth.service'
+import { ActiveUser } from 'src/shared/decorators/active-user.decorator'
 
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -41,5 +43,11 @@ export class AuthController {
   @Post('logout')
   logout(@Body() body: LogoutBodyDTO) {
     return this.authService.logout(body.refreshToken)
+  }
+
+  @Get('profile')
+  @ZodSerializerDto(ProfileResDTO)
+  me(@ActiveUser('userId') userId: string) {
+    return this.authService.me(userId)
   }
 }

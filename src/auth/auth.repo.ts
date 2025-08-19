@@ -47,4 +47,18 @@ export class AuthRepository {
       where: uniqueObject,
     })
   }
+  findUniqueUser(uniqueObject: { id: string }): Promise<Omit<UserType, 'password'> | null> {
+    return this.prismaService.user.findFirst({
+      where: uniqueObject,
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    })
+  }
 }

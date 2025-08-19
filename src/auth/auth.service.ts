@@ -128,4 +128,10 @@ export class AuthService {
       throw new UnauthorizedException()
     }
   }
+
+  me(userId: string) {
+    return this.authRepository.findUniqueUser({
+      id: userId,
+    })
+  }
 }

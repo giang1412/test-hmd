@@ -57,6 +57,10 @@ export const RefreshTokenSchema = z.object({
 
 export const LogoutBodySchema = RefreshTokenBodySchema
 
+export const ProfileResSchema = UserSchema.omit({
+  password: true,
+})
+
 export type RegisterBodyType = z.infer<typeof RegisterBodySchema>
 export type RegisterResType = z.infer<typeof RegisterResSchema>
 export type LoginBodyType = z.infer<typeof LoginBodySchema>
@@ -65,3 +69,4 @@ export type RefreshTokenType = z.infer<typeof RefreshTokenSchema>
 export type RefreshTokenBodyType = z.infer<typeof RefreshTokenBodySchema>
 export type RefreshTokenResType = LoginResType
 export type LogoutBodyType = RefreshTokenBodyType
+export type ProfileResType = z.infer<typeof ProfileResSchema>
