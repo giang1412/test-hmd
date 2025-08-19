@@ -3,6 +3,7 @@ import { ZodSerializerDto } from 'nestjs-zod'
 import {
   LoginBodyDTO,
   LoginResDTO,
+  LogoutBodyDTO,
   RefreshTokenBodyDTO,
   RefreshTokenResDTO,
   RegisterBodyDTO,
@@ -37,15 +38,8 @@ export class AuthController {
     })
   }
 
-  // @Post('logout')
-  // logout(@Body() body: LogoutBodyDTO) {
-  //   return this.authService.logout(body.refreshToken)
-  // }
-
-  // @Post('forgot-password')
-  // @IsPublic()
-  // @ZodSerializerDto(MessageResDTO)
-  // forgotPassword(@Body() body: ForgotPasswordBodyDTO) {
-  //   return this.authService.forgotPassword(body)
-  // }
+  @Post('logout')
+  logout(@Body() body: LogoutBodyDTO) {
+    return this.authService.logout(body.refreshToken)
+  }
 }

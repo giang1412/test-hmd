@@ -3,7 +3,7 @@ import { RegisterBodyDTO } from 'src/auth/auth.dto'
 import { LoginBodyType, LogoutBodyType, RefreshTokenBodyType, RegisterBodyType } from 'src/auth/auth.model'
 import { AuthRepository } from 'src/auth/auth.repo'
 import { RoleType } from 'src/shared/constants/auth.constant'
-import { isUniqueConstraintPrismaError } from 'src/shared/helpers'
+import { isNotFoundPrismaError, isUniqueConstraintPrismaError } from 'src/shared/helpers'
 import { HashingService } from 'src/shared/services/hashing.service'
 import { TokenService } from 'src/shared/services/token.service'
 import { AccessTokenPayloadCreate } from 'src/shared/types/jwt.type'
@@ -106,6 +106,24 @@ export class AuthService {
     } catch (error) {
       if (error instanceof HttpException) {
         throw error
+      }
+      throw new UnauthorizedException()
+    }
+  }
+  async logout(refreshToken: string) {
+    try {
+      // 1. Kiểm tra refreshToken có hợp lệ không
+      await this.tokenService.verifyRefreshToken(refreshToken)
+
+      // 2. Xóa refreshToken trong database
+      await this.authRepository.deleteRefreshToken({
+        token: refreshToken,
+      })
+
+      return { message: 'Đăng xuất thành công' }
+    } catch (error) {
+      if (isNotFoundPrismaError(error)) {
+        throw new Error('Refresh token not found')
       }
       throw new UnauthorizedException()
     }
