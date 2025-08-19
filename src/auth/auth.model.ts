@@ -1,3 +1,4 @@
+import { Role } from 'generated/prisma'
 import { UserSchema } from 'src/shared/model/shared-user.model'
 import { z } from 'zod'
 
@@ -49,7 +50,7 @@ export const RefreshTokenResSchema = LoginResSchema
 export const RefreshTokenSchema = z.object({
   token: z.string(),
   userId: z.number(),
-  deviceId: z.number(),
+  role: z.enum([Role.USER, Role.ADMIN]),
   expiresAt: z.date(),
   createdAt: z.date(),
 })

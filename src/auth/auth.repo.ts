@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 import { Injectable } from '@nestjs/common'
+import { RefreshToken } from '@prisma/client'
 import { RegisterBodyType } from 'src/auth/auth.model'
 import { RoleType } from 'src/shared/constants/auth.constant'
 import { UserType } from 'src/shared/model/shared-user.model'
@@ -27,6 +29,21 @@ export class AuthRepository {
     uniqueObject: { email: string } | { id: string },
   ): Promise<(UserType & { role: RoleType }) | null> {
     return this.prismaService.user.findUnique({
+      where: uniqueObject,
+    })
+  }
+  findUniqueRefreshTokenIncludeUserRole(uniqueObject: {
+    token: string
+  }): Promise<(RefreshToken & { user: UserType & { role: RoleType } }) | null> {
+    return this.prismaService.refreshToken.findUnique({
+      where: uniqueObject,
+      include: {
+        user: true,
+      },
+    })
+  }
+  deleteRefreshToken(uniqueObject: { token: string }) {
+    return this.prismaService.refreshToken.delete({
       where: uniqueObject,
     })
   }
